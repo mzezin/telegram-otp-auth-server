@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 
 export * from './User.model';
+export * from './OTP.model';
+
 
 export const dbInit = async () => {
   mongoose.Promise = Promise;

@@ -3,6 +3,8 @@ import Router from 'koa-router';
 // import passport from 'koa-passport';
 
 import { User } from '../db';
+import { sendOTP } from '../telegram';
+
 import { authenticateLocal } from './auth';
 
 
@@ -21,15 +23,28 @@ router.post('/register', async (ctx) => {
   }
 });
 
+router.post('/createOTP', async (ctx) => {
+  try {
+    const { userId } = ctx.request.body;
+    await sendOTP(userId);
+    ctx.body = { message: 'OTP have been send' };
+  } catch (err) {
+    ctx.status = 400;
+    ctx.body = err;
+  }
+});
 
-router.post('/login', async (ctx) => authenticateLocal((err, user, info) => {
+
+router.post('/login', async (ctx) => authenticateLocal(async (err, user, info) => {
   if (err) {
     ctx.status = 500;
     ctx.body = err;
   } else
   if (user) {
-    ctx.login(user);
-    ctx.redirect('/good');
+    console.log(ctx.request.body.otp);
+    const { id } = user;
+    await sendOTP(id);
+    ctx.redirect('/submitOTP');
   } else {
     ctx.status = 401;
     ctx.body = info;
@@ -37,7 +52,7 @@ router.post('/login', async (ctx) => authenticateLocal((err, user, info) => {
 })(ctx));
 
 
-router.get('/good', (ctx) => {
+router.get('/submitOTP', (ctx) => {
   ctx.status = 200;
   ctx.body = ctx.flash();
 });

@@ -26,6 +26,7 @@
     "koa-session": "^5.12.3",
     "mongoose": "^5.7.9",
     "nodemon": "^1.19.4",
+    "passport-2fa-totp": "^0.0.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0"
   },

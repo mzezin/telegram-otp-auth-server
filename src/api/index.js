@@ -21,6 +21,7 @@ import { initializeAuth, authenticateLocal } from './auth';
 import routes from './routes';
 import { User } from '../db';
 
+
 export const dummy = null;
 
 export const apiInit = async () => {

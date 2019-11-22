@@ -1,7 +1,10 @@
 /* eslint-disable import/prefer-default-export */
 
+// import {Strategy as LocalStrategy}  from 'passport-2fa-totp';
+
 import passport from 'koa-passport';
 import LocalStrategy from 'passport-local';
+
 import { User } from '../db';
 
 passport.serializeUser((user, done) => {
@@ -17,7 +20,7 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-passport.use(new LocalStrategy({ passReqToCallback: true },
+passport.use('local', new LocalStrategy({ passReqToCallback: true, skipTotpVerification: true },
   (async (req, username, password, done) => {
     const user = await User.findOne({ username });
     if (!user) {
@@ -32,7 +35,7 @@ passport.use(new LocalStrategy({ passReqToCallback: true },
 export const initializeAuth = () => passport.initialize();
 
 export const authenticateLocal = (callback) => passport.authenticate('local', {
-  // successRedirect: '/good',
+  // successRedirect: '/createOTP',
   // failureRedirect: '/bad',
   failureFlash: true,
   // failureMessage: true,
